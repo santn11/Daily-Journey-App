@@ -1,21 +1,45 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Dimensions, Text, TouchableOpacity, StatusBar, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { getTempParams } from "../../database/services/signIn";
+import db from "../../database"; // Certifique-se de que o caminho para o arquivo do banco de dados está correto
+
 const { height, width } = Dimensions.get('window');
 
 export default function Trophy() {
     const navigation = useNavigation();
     const [name, setName] = useState(""); // Estado para armazenar o nome
-    const [xp, setXp] = useState(""); // Estado para armazenar o xp
+    const [xp, setXp] = useState(0); // Estado para armazenar o xp
 
     useEffect(() => {
         // Obtém os parâmetros temporários após a montagem do componente
         const { name, xp } = getTempParams();
         setName(name); // Define o nome obtido nos parâmetros temporários
-        setName(xp); // Define o nome obtido nos parâmetros temporários
+        fetchCurrentXP(name); // Busca o XP atual do banco de dados
     }, []);
+
+    const fetchCurrentXP = async (name) => {
+        try {
+            const result = await db.getAllAsync('SELECT xp FROM users WHERE name = ?', [name]);
+            if (result && result.length > 0) {
+                const experience = result[0].xp;
+                setXp(experience);
+            } else {
+                console.log('Nenhum resultado encontrado para o usuário:', name);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar XP do usuário:', error);
+        }
+    };
+
+    const trophies = [
+        { text: "Obtenha 10 pontos de XP", requiredXP: 10 },
+        { text: "Obtenha 50 pontos de XP", requiredXP: 50 },
+        { text: "Obtenha 100 pontos de XP", requiredXP: 100 },
+        { text: "Obtenha 200 pontos de XP", requiredXP: 200 },
+        { text: "Obtenha 500 pontos de XP", requiredXP: 500 }
+    ];
 
     return (
         <View style={styles.container}>
@@ -35,27 +59,28 @@ export default function Trophy() {
             
             <ScrollView contentContainerStyle={styles.cardContainer}>
                 <View style={styles.card}>
-                    <Text style={[styles.xp, {fontSize: 13, fontWeight: "500"}]}>XP: {xp}0</Text>
-                    <View style={styles.trophy}>
-                        <Text style={styles.area}>Ganhe 10 pontos de XP</Text>
-                        <Text style={styles.xp}>+ 5 XP</Text>
-                    </View>
-                    <View style={styles.trophy}>
-                        <Text style={styles.area}>Ganhe 50 pontos de XP</Text>
-                        <Text style={styles.xp}>+ 25 XP</Text>
-                    </View>
-                    <View style={styles.trophy}>
-                        <Text style={styles.area}>Ganhe 100 pontos de XP</Text>
-                        <Text style={styles.xp}>+ 50 XP</Text>
-                    </View>
-                    <View style={styles.trophy}>
-                        <Text style={styles.area}>Ganhe 200 pontos de XP</Text>
-                        <Text style={styles.xp}>+ 100 XP</Text>
-                    </View>
-                    <View style={styles.trophy}>
-                        <Text style={styles.area}>Ganhe 500 pontos de XP</Text>
-                        <Text style={styles.xp}>+ 200 XP</Text>
-                    </View>
+                    <Text style={styles.xp}>Meu XP: {xp}</Text>
+                    {trophies.map((trophy, index) => {
+                        const isAchieved = xp >= trophy.requiredXP;
+                        return (
+                            <View
+                                key={index}
+                                style={[
+                                    styles.trophy,
+                                    isAchieved && { backgroundColor: "#9A83FF" }
+                                ]}
+                            >
+                                <Text style={styles.area}>{trophy.text}</Text>
+                                <View style={[styles.success, isAchieved && { backgroundColor: "#252731" }]}>
+                                    <Icon
+                                        name="check-decagram"
+                                        size={30}
+                                        color={isAchieved ? "#00A36C" : "#252731"}
+                                    />
+                                </View>
+                            </View>
+                        );
+                    })}
                 </View>
             </ScrollView>
         </View>
@@ -75,7 +100,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         width: width * 0.9,
-        height: (height) * .15
+        height: height * 0.15
     },
 
     title: {
@@ -100,17 +125,25 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignItems: "center",
         margin: 10,
-        height: height * .8
+        height: height * 0.8
+    },
+
+    xp: {
+        fontSize: 13,
+        fontWeight: "500",
+        color: "#9A83FF",
     },
 
     trophy: {
         borderRadius: 10,
         width: '100%',
-        alignItems: "baseline",
-        borderWidth: .5,
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        borderWidth: 0.5,
         borderColor: "#9A83FF",
-        padding: 20,
         marginVertical: 10,
+        paddingLeft: 15
     },
 
     area: {
@@ -118,9 +151,12 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
 
-    xp: {
-        fontSize: 12,
-        fontWeight: "300",
-        color: "#9A83FF"
+    success: {
+        paddingVertical: 20,
+        width: '25%',
+        alignItems: "center",
+        justifyContent: "center",
+        borderBottomRightRadius: 10,
+        borderTopRightRadius: 10
     }
 });
