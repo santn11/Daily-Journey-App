@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Projeto6",
+    "slug": "Projeto6",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      "expo-font",
+      "expo-asset"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0adbf880-d1f1-4d4d-9d34-544913e5ad7a"
+      }
+    }
+  }
+}
