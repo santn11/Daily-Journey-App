@@ -20,6 +20,8 @@ export default function Header() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [areasModalVisible, setAreasModalVisible] = useState(false); // Novo estado para o modal "SOBRE AS ÁREAS"
+  const [appModalVisible, setAppModalVisible] = useState(false); // Novo estado para o modal "SOBRE O APP"
   const [modalWidth] = useState(new Animated.Value(0));
 
   const navTrophy = () => {
@@ -103,6 +105,22 @@ export default function Header() {
     }
   };
 
+  const openAreasModal = () => {
+    setAreasModalVisible(true);
+  };
+
+  const closeAreasModal = () => {
+    setAreasModalVisible(false);
+  };
+
+  const openAppModal = () => {
+    setAppModalVisible(true);
+  };
+
+  const closeAppModal = () => {
+    setAppModalVisible(false);
+  };
+
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={toggleModal}>
@@ -135,7 +153,13 @@ export default function Header() {
             </TouchableOpacity> 
             <TouchableOpacity onPress={navMotivational} style={styles.bar}>
               <Text style={styles.text}>MOTIVACIONAL</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openAreasModal} style={styles.bar}>
+              <Text style={styles.text}>SOBRE AS ÁREAS</Text>
             </TouchableOpacity> 
+            <TouchableOpacity onPress={openAppModal} style={styles.bar}>
+              <Text style={styles.text}>SOBRE O APP</Text>
+            </TouchableOpacity>  
             <TouchableOpacity onPress={handleLogOff} style={[styles.bar, {backgroundColor: "#D94862", marginTop: 15}]}>
               <Text style={styles.text}>LOGOFF</Text>
             </TouchableOpacity>
@@ -164,6 +188,49 @@ export default function Header() {
             </View>
           </View>
         </TouchableOpacity>
+      </Modal>
+
+      <Modal visible={areasModalVisible} transparent animationType="slide">
+        <View style={styles.modal}>
+          <TouchableOpacity onPress={closeAreasModal}>
+            <Icon name="close" size={30} color="#000" />
+          </TouchableOpacity>
+          <View style={{ alignItems: "flex-start", gap: 35, padding: 15 }}>
+            <View style={styles.informations}>
+              <Icon name="cash-multiple" size={25} color="#00A36C" style={styles.iconInfo} />
+              <Text style={styles.description}>
+                <Text style={styles.fin}>FINANCEIRO:</Text> Controle seus gastos e investimentos
+              </Text>
+            </View>
+            <View style={styles.informations}>
+              <Icon name="heart-multiple" size={25} color="#D94862" style={styles.iconInfo} />
+              <Text style={styles.description}>
+                <Text style={styles.saude}>SAÚDE:</Text> Crie metas para sua mente e corpo
+              </Text>
+            </View>
+            <View style={styles.informations}>
+              <Icon name="account-box-multiple" size={25} color="#7795DF" style={styles.iconInfo} />
+              <Text style={styles.description}>
+                <Text style={styles.prof}>PROFISSIONAL:</Text> Cresça na carreira com bons hábitos
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={appModalVisible} transparent animationType="slide">
+        <View style={styles.modal}>
+          <Text style={[styles.buttonText, {fontSize: 17}]}>
+              <Text style={{color: "#9A83FF"}}>Daily</Text>Journey
+          </Text>
+          <Text style={{textAlign: "center"}}>
+            Somos um aplicativo de metas, sugerimos as metas para melhorar seu estilo de vida, 
+            ter bons hábitos e sucesso nas diferentes áreas!
+          </Text>
+          <TouchableOpacity onPress={closeAppModal}>
+            <Icon name="close" size={30} color="#000" />
+          </TouchableOpacity>
+        </View>
       </Modal>
     </View>
   );
@@ -255,5 +322,55 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     color: "#a1a1a1"
+  },
+
+  modal: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: 0,
+    width: width,
+    height: width * 0.95,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    backgroundColor: "#fff",
+    padding: 30
+  },
+
+  informations: {
+    flexDirection: "row",
+  },
+
+  iconInfo: {
+    marginRight: 20
+  },
+
+  description: {
+    color: "#212226",
+    fontSize: 15,
+  },
+
+  fin: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#00A36C"
+  },
+
+  saude: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#D94862"
+  },
+
+  prof: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#7795DF"
+  },
+
+  buttonText: {
+    fontSize: 15,
+    fontWeight: "bold",
   },
 });

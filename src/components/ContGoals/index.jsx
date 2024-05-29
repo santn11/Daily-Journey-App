@@ -20,15 +20,15 @@ export default function ContGoals() {
         <View style={styles.contGoals}>
             <TouchableOpacity onPress={openModal2} style={{alignItems: "center", gap: 10}}>
                 <Icon name="cash-multiple" size={40} color="#00A36C" />
-                <Text style={{color: "#fff"}}>3 METAS</Text>
+                <Text style={{color: "#fff", fontSize: 13, fontWeight: "500"}}>3 METAS</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={openModal2} style={{alignItems: "center", gap: 10}}>
                 <Icon name="heart-multiple" size={40} color="#D94862" />
-                <Text  style={{color: "#fff"}}>3 METAS</Text>
+                <Text  style={{color: "#fff", fontSize: 13, fontWeight: "500"}}>3 METAS</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={openModal2} style={{alignItems: "center", gap: 10}}>
                 <Icon name="account-box-multiple" size={40} color="#7795DF" />
-                <Text  style={{color: "#fff"}}>3 METAS</Text>
+                <Text  style={{color: "#fff", fontSize: 13, fontWeight: "500"}}>3 METAS</Text>
             </TouchableOpacity>
 
             <Modal visible={isVisible2} transparent animationType="slide">
@@ -62,8 +62,6 @@ export default function ContGoals() {
                 </View>
             </Modal>
         </View>
-
-
     );
 }
 
@@ -76,7 +74,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         backgroundColor: "#252731",
         gap: 20,
-        padding: 30
+        padding: 25
     },
 
     modal: {

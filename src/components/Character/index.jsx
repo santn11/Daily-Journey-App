@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, Dimensions } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
-import { getTempParams } from '../../database/services/signIn'; // Importa a função getTempParams
+import { useRoute, useFocusEffect } from '@react-navigation/native';
+import { getTempParams } from '../../database/services/signIn';
 import db from '../../database';
+
+const { width } = Dimensions.get('window');
 
 // Função para buscar o XP do usuário no banco de dados
 const fetchCurrentXP = async (name) => {
@@ -24,33 +26,56 @@ const fetchCurrentXP = async (name) => {
   }
 };
 
+// Função para buscar metas concluídas do usuário no banco de dados
+const fetchCurrentMetasConc = async (name) => {
+  try {
+    console.log('Buscando metas concluídas para o usuário:', name);
+    const result = await db.getAllAsync('SELECT metasConc FROM users WHERE name = ?', [name]);
+    if (result && result.length > 0) {
+      const metasConc = result[0].metasConc;
+      console.log('Metas concluídas do usuário:', metasConc);
+      return metasConc;
+    } else {
+      console.log('Nenhum resultado encontrado para o usuário:', name);
+      return 0;
+    }
+  } catch (error) {
+    console.error('Erro ao buscar metas concluídas do usuário:', error);
+    throw error;
+  }
+};
+
 const CircleProgressBar = () => {
   const route = useRoute();
   const { name: initialName = '', xp: initialXP = 0 } = route.params || {};
   const [name, setName] = useState(initialName);
   const [currentXP, setCurrentXP] = useState(initialXP);
+  const [currentMetasConc, setCurrentMetasConc] = useState(0);
 
-  const updateXP = async () => {
+  const updateXPAndMetas = async () => {
     try {
       const newXP = await fetchCurrentXP(name);
       setCurrentXP(newXP);
+      const newMetasConc = await fetchCurrentMetasConc(name);
+      setCurrentMetasConc(newMetasConc);
     } catch (error) {
-      console.error('Erro ao atualizar o XP do usuário:', error);
+      console.error('Erro ao atualizar o XP e metas concluídas do usuário:', error);
     }
   };
 
   useEffect(() => {
-    // Atualiza o nome e o XP do usuário quando o componente é montado
+    // Atualiza o nome, XP e metas concluídas do usuário quando o componente é montado
     const { name, xp } = getTempParams();
     setName(name);
     setCurrentXP(xp);
     console.log('Nome do usuário:', name);
     console.log('XP inicial do usuário:', xp);
+    updateXPAndMetas();
   }, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      updateXP();
+      updateXPAndMetas();
     }, [name])
   );
 
@@ -77,7 +102,10 @@ const CircleProgressBar = () => {
           </View>
         )}
       </AnimatedCircularProgress>
-      <Text style={styles.xp}>XP: {currentXP}</Text>
+      <View style={{ flexDirection: 'row', width: width * 0.6, justifyContent: 'space-between', alignContent: 'center' }}>
+        <Text style={styles.xp}>XP: {currentXP}</Text>
+        <Text style={styles.xp}>Metas concluídas: {currentMetasConc}</Text>
+      </View>
     </View>
   );
 };
@@ -85,7 +113,7 @@ const CircleProgressBar = () => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    gap: 15
+    gap: 15,
   },
 
   circle: {
@@ -105,8 +133,8 @@ const styles = StyleSheet.create({
   xp: {
     fontSize: 12,
     fontWeight: '300',
-    color: '#9A83FF'
-  }
+    color: '#9A83FF',
+  },
 });
 
 export default CircleProgressBar;
