@@ -3,27 +3,25 @@ import { View, StyleSheet, Dimensions, Text, TouchableOpacity, StatusBar, Scroll
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { getTempParams } from "../../database/services/signIn";
-import db from "../../database"; // Certifique-se de que o caminho para o arquivo do banco de dados está correto
+import db from "../../database"; 
 
 const { height, width } = Dimensions.get('window');
 
 export default function Trophy() {
     const navigation = useNavigation();
-    const [name, setName] = useState(""); // Estado para armazenar o nome
-    const [xp, setXp] = useState(0); // Estado para armazenar o xp
-    const [completedMissions, setCompletedMissions] = useState(0); // Estado para armazenar o número de missões concluídas
+    const [name, setName] = useState(""); 
+    const [xp, setXp] = useState(0); 
+    const [completedMissions, setCompletedMissions] = useState(0);
 
     useEffect(() => {
-        // Obtém os parâmetros temporários após a montagem do componente
         const { name, xp } = getTempParams();
-        setName(name); // Define o nome obtido nos parâmetros temporários
-        setXp(xp); // Define o XP obtido nos parâmetros temporários
-        fetchCurrentXP(name); // Busca o XP atual do banco de dados
-        fetchCurrentMetasConc(name); // Busca as metas concluídas do banco de dados
+        setName(name); 
+        setXp(xp); 
+        fetchCurrentXP(name); 
+        fetchCurrentMetasConc(name); 
     }, []);
 
     useEffect(() => {
-        // Atualiza as metas concluídas sempre que houver uma mudança no nome do usuário
         fetchCurrentMetasConc(name);
     }, [name]);
 

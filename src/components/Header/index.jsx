@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Dimensions, Text, TouchableOpacity, Modal, Animated, Alert } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { getTempParams } from "../../database/services/signIn"; // Importa a função getTempParams
+import { getTempParams } from "../../database/services/signIn"; 
 import db from "../../database";
 const { width, height } = Dimensions.get('window');
 
@@ -10,18 +10,18 @@ export default function Header() {
   const navigation = useNavigation();
   const route = useRoute();
   const { name: initialName = "" } = route.params || {};  
-  const [name, setName] = useState(initialName); // Nome do usuário
+  const [name, setName] = useState(initialName); 
 
   useEffect(() => {
-    // Atualiza o nome do usuário quando a rota muda
+    
     const { name } = getTempParams();
     setName(name);
   }, []);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
-  const [areasModalVisible, setAreasModalVisible] = useState(false); // Novo estado para o modal "SOBRE AS ÁREAS"
-  const [appModalVisible, setAppModalVisible] = useState(false); // Novo estado para o modal "SOBRE O APP"
+  const [areasModalVisible, setAreasModalVisible] = useState(false); 
+  const [appModalVisible, setAppModalVisible] = useState(false); 
   const [modalWidth] = useState(new Animated.Value(0));
 
   const navTrophy = () => {
@@ -90,17 +90,17 @@ export default function Header() {
 
   const handleDeleteAccount = async () => {
     try {
-      // Certifique-se de substituir `runAsync` pelo método correto para excluir a conta no banco de dados
+      
       await db.runAsync('DELETE FROM users WHERE name = ?', [name]);
-      // Exibe um alerta de sucesso
+      
       Alert.alert('Sucesso', 'Conta excluída com sucesso!');
-      // Redefine a navegação para a tela de boas-vindas
+    
       navigation.reset({
         index: 0,
         routes: [{ name: 'Welcome' }]
       });
     } catch (error) {
-      // Se ocorrer um erro ao excluir a conta, exibe um alerta de erro
+    
       Alert.alert('Erro', 'Ocorreu um erro ao excluir a conta: ' + error);
     }
   };

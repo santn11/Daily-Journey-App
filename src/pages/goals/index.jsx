@@ -96,7 +96,7 @@ export default function ViewGoals() {
             await db.runAsync('UPDATE users SET xp = xp + 10, metasConc = metasConc + 1 WHERE name = ?', [name]);
             setIsVisible(true);
             console.log('Usuário', {name}, 'ganhou +10 pontos XP e +1 meta concluída');
-            fetchCurrentMetasConc(name); // Log metasConc after updating
+            fetchCurrentMetasConc(name);
         } catch (error) {
             console.error('Erro ao atualizar a XP e metasConc do usuário:', error);
         }

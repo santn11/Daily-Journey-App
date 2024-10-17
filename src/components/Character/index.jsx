@@ -7,10 +7,9 @@ import db from '../../database';
 
 const { width } = Dimensions.get('window');
 
-// Função para buscar o XP do usuário no banco de dados
 const fetchCurrentXP = async (name) => {
   try {
-    console.log('Buscando XP para o usuário:', name); // Log para verificação
+    console.log('Buscando XP para o usuário:', name); 
     const result = await db.getAllAsync('SELECT xp FROM users WHERE name = ?', [name]);
     if (result && result.length > 0) {
       const experience = result[0].xp;
@@ -26,7 +25,6 @@ const fetchCurrentXP = async (name) => {
   }
 };
 
-// Função para buscar metas concluídas do usuário no banco de dados
 const fetchCurrentMetasConc = async (name) => {
   try {
     console.log('Buscando metas concluídas para o usuário:', name);
@@ -64,7 +62,6 @@ const CircleProgressBar = () => {
   };
 
   useEffect(() => {
-    // Atualiza o nome, XP e metas concluídas do usuário quando o componente é montado
     const { name, xp } = getTempParams();
     setName(name);
     setCurrentXP(xp);

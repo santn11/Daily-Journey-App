@@ -21,17 +21,14 @@ export default function App() {
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
-    // Este listener é disparado sempre que uma notificação é recebida enquanto o app está em primeiro plano
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
     });
 
-    // Este listener é disparado sempre que um usuário toca ou interage com uma notificação (funciona quando o app está em primeiro plano, segundo plano ou fechado)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });
 
-    // Agendamento automático de notificações ao montar o componente
     scheduleDailyNotifications();
 
     return () => {

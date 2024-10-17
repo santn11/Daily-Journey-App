@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 import db from "../index";
 
-let tempParams = {}; // Define a variável tempParams fora da função handleSignIn
+let tempParams = {}; 
 
 const handleSignIn = async (email, password, navigation) => {
     if (!email || !password) {
@@ -38,7 +38,7 @@ const handleSignIn = async (email, password, navigation) => {
 };
 
 export const getTempParams = () => {
-    return tempParams; // Função para obter os parâmetros temporários
+    return tempParams; // Obtem os parâmetros temporários
 }
 
 export default handleSignIn;
